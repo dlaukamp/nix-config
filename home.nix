@@ -80,6 +80,7 @@
       l = "ls -lah";
       ".." = "cd ..";
       gs = "git status";
+      gd = "git diff";
     };
     historySize = 10000;
     historyFileSize = 1000000;
@@ -102,6 +103,10 @@
     extraConfig = {
       init = {
         defaultBranch = "master";
+      };
+      advice.addIgnoredFile = false;
+      delta = {
+        syntax-theme = "Visual Studio Dark+";
       };
     };
     delta.enable = true;
