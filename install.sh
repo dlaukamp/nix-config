@@ -25,5 +25,12 @@ $EDITOR $SCRIPT_DIR/flake.nix;
 # Rebuild system
 # sudo nixos-rebuild switch --flake $SCRIPT_DIR;
 
+# on
+if [ ! -f /tmp/foo.txt ]; then
+  echo "WSL detected, remove .bashrc and .profile to prevent conflict"
+  rm ~/.bashrc
+  rm ~/.profile
+fi
+
 # Install and build home-manager configuration
-nix run home-manager/master --extra-experimental-features 'nix-command, flakes' -- switch --flake $SCRIPT_DIR;
+nix run home-manager/master --extra-experimental-features 'nix-command flakes' -- switch --flake $SCRIPT_DIR --extra-experimental-features 'nix-command flakes';
