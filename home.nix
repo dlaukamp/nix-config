@@ -1,10 +1,17 @@
 { config, pkgs, ... }:
 
+# Determine which OS is currently being used
+let 
+  osRelease = builtins.readFile "/etc/os-release";
+  isNixOs = builtins.match ".*NAME=NixOS.*" osRelease != null;
+in 
+
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "dlkmp";
   home.homeDirectory = "/home/dlkmp";
+
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -111,5 +118,4 @@
     };
     delta.enable = true;
   };
-
 }

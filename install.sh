@@ -10,9 +10,10 @@ if [ $# -gt 0 ]
     SCRIPT_DIR=~/.dotfiles
 fi
 
-# Patch flake.nix with different username/name
-# sed -i "0,/dlkmp/s//$(whoami)/" $SCRIPT_DIR/flake.nix
-# sed -i "0,/Dlkmp/s//$(getent passwd $(whoami) | cut -d ':' -f 5 | cut -d ',' -f 1)/" $SCRIPT_DIR/flake.nix
+# Patch different .nix-files with different username/name
+sed -i "0,/dlkmp/s//$(whoami)/" $SCRIPT_DIR/flake.nix
+sed -i "0,/dlkmp/s//$(whoami)/" $SCRIPT_DIR/configuration.nix
+sed -i "0,/dlkmp/s//$(whoami)/" $SCRIPT_DIR/home.nix
 # sed -i "s+~/.dotfiles+$SCRIPT_DIR+g" $SCRIPT_DIR/flake.nix
 
 # Open up editor to manually edit flake.nix before install
@@ -25,4 +26,4 @@ $EDITOR $SCRIPT_DIR/flake.nix;
 # sudo nixos-rebuild switch --flake $SCRIPT_DIR;
 
 # Install and build home-manager configuration
-nix run home-manager/master --extra-experimental-features nix-command --extra-experimental-features flakes -- switch --flake $SCRIPT_DIR;
+nix run home-manager/master --extra-experimental-features 'nix-command, flakes' -- switch --flake $SCRIPT_DIR;
