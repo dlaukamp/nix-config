@@ -8,24 +8,29 @@
     nixvim.url = "github:dlaukamp/nixvim";
   };
 
-  outputs =  { self, nixpkgs, home-manager, nixvim, ...}@ inputs: 
-    let
-      lib = nixpkgs.lib;
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      nixosConfigurations = {
-        vm-nixos-01 = lib.nixosSystem {
-          inherit system;
-          modules = [ ./configuration.nix ]; 
-        };
-      };
-      homeConfigurations = {
-        dlkmp = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs; 
-          extraSpecialArgs = {inherit inputs;};
-          modules = [ ./home.nix ]; 
-         };
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nixvim,
+    ...
+  } @ inputs: let
+    lib = nixpkgs.lib;
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in {
+    nixosConfigurations = {
+      vm-nixos-01 = lib.nixosSystem {
+        inherit system;
+        modules = [./configuration.nix];
       };
     };
+    homeConfigurations = {
+      dlkmp = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = {inherit inputs;};
+        modules = [./home.nix];
+      };
+    };
+  };
 }

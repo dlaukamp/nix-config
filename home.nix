@@ -1,17 +1,24 @@
-{ config, pkgs, inputs, ... }:
-
-# Determine which OS is currently being used
-let 
-  osRelease = builtins.readFile "/etc/os-release";
-  isNixOs = builtins.match ".*NAME=NixOS.*" osRelease != null;
-in 
-
 {
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
+# Determine which OS is currently being used
+let
+  # not used, let's leave it for demonstation purposes
+  nixvim' = inputs.nixvim.packages."x86_64-linux".default;
+  nvim = nixvim'.nixvimExtend {
+    config = {
+      theme = lib.mkForce "harmonic-dark";
+    };
+  };
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "dlkmp";
   home.homeDirectory = "/home/dlkmp";
-
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -25,7 +32,7 @@ in
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
-    inputs.nixvim.packages."x86_64-linux".default
+    nvim
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -92,9 +99,9 @@ in
     };
     historySize = 10000;
     historyFileSize = 1000000;
-    historyControl = [ "ignoredups" ];
-  
-    initExtra  = ''
+    historyControl = ["ignoredups"];
+
+    initExtra = ''
       set -o vi
     '';
   };
@@ -105,7 +112,7 @@ in
     userEmail = "david@lauka.mp";
     aliases = {
       co = "checkout";
-      cob = "checkout --branch";  
+      cob = "checkout --branch";
       br = "branch";
     };
     extraConfig = {
@@ -119,4 +126,5 @@ in
     };
     delta.enable = true;
   };
+  programs.ripgrep.enable = true;
 }
